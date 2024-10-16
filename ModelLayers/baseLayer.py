@@ -23,21 +23,17 @@ class Perceptron: #also figure out if I can do math stuff as well
 
     
     def backward(self, xlabel, ylabel, layerGradient = None, learningRate = None):
-        #get the error, not sure if activation function (sigmoid) is going to affect the result or not,
-        #trial and error
-        error = np.subtract(ylabel, self.forward(xlabel))
-        #error in terms of y label, and ylabel = weight times x, so error times input should give you the change,
-        # its the other side of the coin, 
-        # if output = input times weight, then change in weights = error in output times input, 
-        # intuitively makes sense
-        change_in_weight = np.multiply(error, xlabel)
-        self.weights = np.subtract(self.weights, change_in_weight)
+        for x, y in zip(list(xlabel), list(ylabel)):
+            error = np.subtract(ylabel, self.forward(xlabel)) 
+            #sigmoid is very much needed here
+            # if output = input times weight, then change in weights = error in output times input to adjust
+            # since we want the size of the weight to be proportional to the size of the neuron compared to the
+            # other neurons
+            change_in_weight = np.multiply(error, xlabel)
+            self.weights = np.subtract(self.weights, change_in_weight)
 
     def forward(self, input):
         return self.activation_func(input*self.weights) + self.bias
-
-
-
 
 
 #next step is to implement a model with multiple neurons and weights
@@ -54,26 +50,42 @@ class MultilayerPerceptron:
         self.sizes = array_sizes
         self.num_layers = len(array_sizes)
 
+        self.activation_layers = []
+        self.raw_layers_values = []
+
 
         
         #creates a random weight array of size hidden layers by hidden layers, essentially all the weights needed
         #in order for our model to pass the information forward
     def backwards(self, xs, ys):
+        #formula is the same as single, but this time, since multiple weights and multiple neurons
+        #connect with one neuron in the next layer, we need to take the partial derivative of each
+        #weight with respect to its neuron all the way back to the beginning neuron. so it will be 
+        #a matrix of weights - a matrix of change in weights from the error 
         #find formula first then code it out
-        for x, y in zip(xs, ys):
-            error = np.subtract(self.forward(x), y)
+        formula_delta_weight: np.ndarray = lambda x, error: np.multiply(x, error)# finds the change in error
 
+        for x, y in zip(xs, ys): #this loops over all inputs and all outputs that correspond to that input
+            error = np.subtract(self.forward(x), y)
+            neuron_average_error = sum(error)/len(np.asarray(error))
+            for layer_weights in range(0, self.weights):
+                new_layer_weights = self.weights[layer_weights] - np.transpose(formula_delta_weight(x=input, error=neuron_average_error)) 
+                self.weights[layer_weights] = new_layer_weights
             
+            #each value should be the average change in weights of the 
+
+
     def forward(self, x: np.ndarray) -> np.ndarray:
 
-        activation_layers = [x]
+        self.activation_layers.append(x)
         current_activation = x #start with the input
-        raw_layers_values = []
 
         #self.weight is an array of weight matr
 
         for w, b in zip(self.weights, self.biases):
-            next = np.dot(w, activation) + b
-            raw_layers_values.append(next)
-            activation_layers.append(sigmoid(next))
-            activation = activation_layers[-1] #next activation neuron should be the last vector of neurons that we added
+            next = np.dot(w, current_activation) + b
+            self.raw_layers_values.append(next)
+            self.activation_layers.append(sigmoid(next))
+            #next activation neuron should be the last vector of neurons that we added
+            current_activation = self.activation_layers[-1] 
+
