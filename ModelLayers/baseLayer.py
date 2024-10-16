@@ -66,10 +66,24 @@ class MultilayerPerceptron:
         formula_delta_weight: np.ndarray = lambda x, error: np.multiply(x, error)# finds the change in error
 
         for x, y in zip(xs, ys): #this loops over all inputs and all outputs that correspond to that input
-            error = np.subtract(self.forward(x), y)
-            neuron_average_error = sum(error)/len(np.asarray(error))
+            #standard error of output
+            error = np.subtract(self.forward(x), y) 
+
             for layer_weights in range(0, self.weights):
-                new_layer_weights = self.weights[layer_weights] - np.transpose(formula_delta_weight(x=input, error=neuron_average_error)) 
+
+                #find the error for each of the neurons of the next layer
+                error_next_layer: np.ndarray  #this is the error of the next layer (vector most likely), used to adjust weights of prev layer
+
+        #this assumes that the error that's being used for that layer would be the average of the error
+                #that's been applied for each next layer, if i'm wrong please correct me
+                neuron_average_error = sum(error_next_layer)/len(np.asarray(error_next_layer))
+
+                #this finds the new weights (which should be the transposed version of the)
+                new_layer_weights = np.subtract(self.weights[layer_weights], 
+                                                np.transpose(
+                                                    formula_delta_weight(x=input, error=neuron_average_error)
+                                                    )
+                                                )
                 self.weights[layer_weights] = new_layer_weights
             
             #each value should be the average change in weights of the 
