@@ -75,8 +75,9 @@ class MultilayerPerceptron:
                 error_next_layer: np.ndarray  #this is the error of the next layer (vector most likely), used to adjust weights of prev layer
 
         #this assumes that the error that's being used for that layer would be the average of the error
-                #that's been applied for each next layer, if i'm wrong please correct me
+            #that's been applied for each next layer, if i'm wrong please correct me
                 neuron_average_error = sum(error_next_layer)/len(np.asarray(error_next_layer))
+#error might be this or just the error itself applied to that layer without change w/respect to the next layer
 
                 #this finds the new weights (which should be the transposed version of the)
                 new_layer_weights = np.subtract(self.weights[layer_weights], 
@@ -92,7 +93,7 @@ class MultilayerPerceptron:
     def forward(self, x: np.ndarray) -> np.ndarray:
 
         self.activation_layers.append(x)
-        current_activation = x #start with the input
+        current_activation = x #start with the input, end with output
 
         #self.weight is an array of weight matr
 
@@ -103,3 +104,4 @@ class MultilayerPerceptron:
             #next activation neuron should be the last vector of neurons that we added
             current_activation = self.activation_layers[-1] 
 
+        return current_activation
