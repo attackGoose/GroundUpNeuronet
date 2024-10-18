@@ -72,12 +72,18 @@ class MultilayerPerceptron:
             for layer_weights in range(0, self.weights):
 
                 #find the error for each of the neurons of the next layer
-                error_next_layer: np.ndarray  #this is the error of the next layer (vector most likely), used to adjust weights of prev layer
+                error_next_layer: np.ndarray = error 
+                #this is the error of the next layer (vector most likely), 
+                # used to adjust weights of prev layer, might be constant throughout, not sure
 
         #this assumes that the error that's being used for that layer would be the average of the error
             #that's been applied for each next layer, if i'm wrong please correct me
                 neuron_average_error = sum(error_next_layer)/len(np.asarray(error_next_layer))
-#error might be this or just the error itself applied to that layer without change w/respect to the next layer
+                #not sure if error is specific to that layer or the general error overall
+
+
+#do all weights have the same affect on the final end result? maybe
+
 
                 #this finds the new weights (which should be the transposed version of the)
                 new_layer_weights = np.subtract(self.weights[layer_weights], 

@@ -1,8 +1,8 @@
 import numpy as np
-
+from types import list, dict
 class Encoder:
     #encoder layer of a transformer
-    def __init__(self, input_size):
+    def __init__(self, inputs: list):
         pass
 
 #transformer is really simple in retrospect, its just a ton of normalization layers, feed forward, 
@@ -10,7 +10,7 @@ class Encoder:
 #doing this to get intuition and use this to apply for research cus indepth knowledge of math is needed
 
 class WordEmbeddings:
-    def __init__(self, inputs: str, query_size): 
+    def __init__(self, inputs: str, query_size: str): #query size for now is user inputted, later on fix
         """
         #tokenize the string
         #for now, this process will give each of them a random value, change value later as it trains, each word
@@ -25,6 +25,7 @@ class WordEmbeddings:
         #if its done in this way all the values including key, value, and query are all going to be random
         #self.embeddings = [np.random.rand(3, query_size) for input in inputs] 
         #too many parameters if upscaled, do something else
+        #basically all vectors should have the same dimension
         pass
 
 
