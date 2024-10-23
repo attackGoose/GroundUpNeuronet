@@ -1,5 +1,7 @@
 import numpy as np
-from types import list, dict
+from types import list, dict, FunctionType
+
+
 class Encoder:
     #encoder layer of a transformer
     def __init__(self, inputs: list):
@@ -35,4 +37,6 @@ class WordEmbeddings:
     def positionEmbedding(self):
         pass #add position embeddings to the tokenized words, essentially adding the value and query vectors
 
-    
+class SelfAttention:
+    def __init__(self):
+        pass

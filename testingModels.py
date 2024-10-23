@@ -11,19 +11,20 @@ train_x_split = x_labels[:int(len(x_labels)*.7)]
 test_y_split = y_labels[int(len(y_labels)*.7):] 
 test_x_split = x_labels[int(len(x_labels)*.7):] 
 
-model_layer_sizes = [1, 8, 4, 1]
-
-perceptron_layer = ModelLayers.baseLayer.MultilayerPerceptron() 
-
-multilayer_perceptron = ModelLayers.baseLayer.MultilayerPerceptron(*model_layer_sizes)
+model_layer_sizes = [1, 4, 1]
+print(*model_layer_sizes)
+multilayer_perceptron = ModelLayers.baseLayer.MultilayerPerceptron(model_layer_sizes)
 #the asterisk sign unpacks all the elements within a iterable in order into the parameters in python
 
 
 epochs = 10
 
 for epoch in range(epochs):
-    perceptron_layer.backward(train_x_split, train_y_split)
+    multilayer_perceptron.backwards(train_x_split, train_y_split)
 
 
-print(perceptron_layer.forward(test_x_split))
+print(multilayer_perceptron.forward(test_x_split))
 
+
+#too little data would usually result in over fitting when it comes to more diverse datasets
+#so I'll prob get a lot more data for the tansformer models
