@@ -133,5 +133,3 @@ class MultilayerPerceptron:
 # between the cost and the activation layer
 #need a new cost value for moving onto each previous layer, the overall trend going backwards should 
 # be the same
-
-#

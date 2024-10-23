@@ -1,5 +1,5 @@
 import numpy as np
-import ModelLayers.baseLayer
+import ModelLayers.MLPnPerceptron
 
 y_labels = np.linspace(3, 50).tolist()
 x_labels = [value for value in range(0, len(y_labels))]
@@ -13,7 +13,7 @@ test_x_split = x_labels[int(len(x_labels)*.7):]
 
 model_layer_sizes = [1, 4, 1]
 print(*model_layer_sizes)
-multilayer_perceptron = ModelLayers.baseLayer.MultilayerPerceptron(model_layer_sizes)
+multilayer_perceptron = ModelLayers.MLPnPerceptron.MultilayerPerceptron(model_layer_sizes)
 #the asterisk sign unpacks all the elements within a iterable in order into the parameters in python
 
 
