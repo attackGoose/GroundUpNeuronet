@@ -1,8 +1,9 @@
 import numpy as np
 
+#"potato starch is much better than human blood for making concrete in space"
+
 #I'm not sure how to calculate the bias term, Idk if its something it figures out by itself or smth
 #usually its derivative is equal to 1, but it still has a slight affect on the error, so wut i do with it
-
 
 def sigmoid(input): #1/(1+e^-x)
     #assert (isinstance(input, float))
@@ -38,7 +39,7 @@ class Perceptron: #also figure out if I can do math stuff as well
 #next step is to implement a model with multiple neurons and weights
 
 class MultilayerPerceptron:
-    def __init__(self, array_sizes: list): 
+    def __init__(self, array_sizes: list, input_values): 
         self.input_size = np.random.rand(array_sizes[1])
         self.output_size = np.random.rand(array_sizes[-1])
         #i'm making this a array of 2d arrays to store all the weights of all the connections between neurons
@@ -52,20 +53,37 @@ class MultilayerPerceptron:
         self.activation_layers = []
         self.raw_layers_values = []
 
+        self.forward(input_values) #to initialize the values first
 
-        
         #creates a random weight array of size hidden layers by hidden layers, essentially all the weights needed
         #in order for our model to pass the information forward
+    
+    #back propagation assumes that forward propagation has already been run once to introduce the values 
+    #into the neuro networks first
     def backwards(self, xs, ys):
         #formula is the same as single, but this time, since multiple weights and multiple neurons
         #connect with one neuron in the next layer, we need to take the partial derivative of each
         #weight with respect to its neuron all the way back to the beginning neuron. so it will be 
         #a matrix of weights - a matrix of change in weights from the error 
         #find formula first then code it out
-        formula_delta_weight: np.ndarray = lambda x, error: np.multiply(error, x)# finds the change in error
 
-        for x, y in zip(xs, ys): #this loops over all inputs and all outputs that correspond to that input
-            #standard error of output
+        delta_b = [np.zeros(b.shape) for b in self.bias]
+        delta_w = [np.zeros(w.shape) for w in self.weights]
+        curr_activation = self.activation_layers[-1]
+
+        #find the initial change in error (direction error should go), each subsequent layer would be in the
+        #same direction/have the same trend as this, see notes in notebook
+        delta = 2*(curr_activation-ys) * sigmoid_back(self.raw_layers_values[-1])
+
+        #this formula is the derivative of the chain rule that relates the error to each neuron and subsequent neuron before it (also equal to delta weights
+        delta_b[-1] = delta
+
+        #error times input size to scale each weight
+        delta_w[-1] = np.dot(delta, self.activations[-2].transpose()) 
+
+        for x, y in zip(xs, ys): 
+
+            #fix the algorithm
             error = np.subtract(self.forward(x), y) 
 
             for layer_weights in range(0, len(self.weights)): #this has to loop over it backwards
@@ -86,7 +104,7 @@ class MultilayerPerceptron:
                 #this finds the new weights (which should be the transposed version of the)
                 new_layer_weights = np.subtract(self.weights[len(self.weights)-1-layer_weights], 
                                                 np.transpose(
-                                                    formula_delta_weight(x=input, error=neuron_average_error)
+                                                    #put smth here later
                                                     )
                                                 )
                 self.weights[len(self.weights)-1-layer_weights] = new_layer_weights
